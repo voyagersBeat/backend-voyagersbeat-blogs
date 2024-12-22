@@ -14,7 +14,7 @@ app.use(bodyParser.json({ limit: "10mb" }));
 app.use(bodyParser.urlencoded({ limit: "10mb", extended: true }));
 app.use(
   cors({
-    origin: "http://localhost:5173",
+    origin: "https://voyagers-frontend.onrender.com",
     methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH"], // Add PATCH here
     credentials: true,
   })
