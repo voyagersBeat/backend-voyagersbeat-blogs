@@ -2,28 +2,26 @@ const express = require("express");
 const router = express.Router();
 const User = require("../model/user.model");
 const generateToken = require("../middleware/generate.token");
+const verifyToken = require("../middleware/verify.token");
 
-// register new user
-
+// Register new user
 router.post("/register", async (req, res) => {
   try {
     const { email, password, username } = req.body;
     const user = new User({ email, password, username });
     await user.save();
-    res.status(200).send({ message: "Registration Successfull", user: user });
+    res.status(200).send({ message: "Registration Successful", user });
   } catch (err) {
     console.log("Failed to register...", err);
     res.status(500).send({ message: "Registration Failed" });
   }
 });
 
-// login user
-
-// login user
+// Login user
 router.post("/login", async (req, res) => {
   try {
     const { email, password } = req.body;
-    const user = await User.findOne({ email: email });
+    const user = await User.findOne({ email });
     if (!user) {
       return res.status(404).send({ message: "User Not Found" });
     }
@@ -38,7 +36,6 @@ router.post("/login", async (req, res) => {
       httpOnly: true,
       secure: true,
       sameSite: "Strict", // Ensures cookies are only sent in a same-site context
-      // No maxAge or expires to make it a session cookie
     });
     res.status(200).send({
       message: "Login Successful",
@@ -55,32 +52,43 @@ router.post("/login", async (req, res) => {
   }
 });
 
-// logout the user
-
+// Logout the user
 router.post("/logout", async (req, res) => {
   try {
     res.clearCookie("token");
-    res.status(200).send({ message: "Logout Successfully" });
+    res.status(200).send({ message: "Logout Successful" });
   } catch (err) {
     console.log("Failed to logout...", err);
     res.status(500).json({ message: "Logout Failed!" });
   }
 });
 
-// get users
-
-router.get("/users", async (req, res) => {
+// Fetch current user
+router.get("/current-user", verifyToken, async (req, res) => {
   try {
-    const users = await User.find({}, "id email role");
-    res.status(200).send({ message: "Users Found Successfully", users: users });
+    const user = await User.findById(req.userId).select("-password");
+    if (!user) {
+      return res.status(404).send({ message: "User not found" });
+    }
+    res.status(200).send({ user });
   } catch (err) {
-    console.log("Failed to get users...", err);
-    res.status(500).json({ message: "Failed! to Get user" });
+    console.log("Failed to fetch current user...", err);
+    res.status(500).json({ message: "Failed to fetch user data" });
   }
 });
 
-// delete a user
+// Get all users
+router.get("/users", async (req, res) => {
+  try {
+    const users = await User.find({}, "id email role");
+    res.status(200).send({ message: "Users Found Successfully", users });
+  } catch (err) {
+    console.log("Failed to get users...", err);
+    res.status(500).json({ message: "Failed to Get Users" });
+  }
+});
 
+// Delete a user
 router.delete("/users/:id", async (req, res) => {
   try {
     const { id } = req.params;
@@ -88,15 +96,14 @@ router.delete("/users/:id", async (req, res) => {
     if (!user) {
       return res.status(404).send({ message: "User not found" });
     }
-    res.status(200).send({ message: "user delete successfully" });
+    res.status(200).send({ message: "User deleted successfully" });
   } catch (err) {
-    console.log("Failed to  delete user...", err);
-    res.status(500).json({ message: "Failed! to delete user" });
+    console.log("Failed to delete user...", err);
+    res.status(500).json({ message: "Failed to delete user" });
   }
 });
 
-//update user's role
-
+// Update user's role
 router.put("/users/:id", async (req, res) => {
   try {
     const { id } = req.params;
@@ -105,12 +112,10 @@ router.put("/users/:id", async (req, res) => {
     if (!user) {
       return res.status(404).send({ message: "User not found" });
     }
-    res
-      .status(200)
-      .send({ message: "User's role updated successfully", user: user });
+    res.status(200).send({ message: "User's role updated successfully", user });
   } catch (err) {
     console.log("Failed to update user's role...", err);
-    res.status(500).json({ message: "Failed! to update user's role" });
+    res.status(500).json({ message: "Failed to update user's role" });
   }
 });
 
