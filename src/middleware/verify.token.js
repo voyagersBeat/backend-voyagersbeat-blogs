@@ -3,13 +3,15 @@ const JWT_SECRET = process.env.jwt_SECRET_KEY;
 
 const verifyToken = (req, res, next) => {
   try {
-    const token = req.cookies.token;
+    const authHeader = req.headers.authorization;
+    const token = authHeader && authHeader.split(" ")[1];
+    const finalToken = token || req.cookies.token;
 
-    if (!token) {
+    if (!finalToken) {
       return res.status(401).send({ message: "No token provided" });
     }
 
-    const decode = jwt.verify(token, JWT_SECRET);
+    const decode = jwt.verify(finalToken, JWT_SECRET);
 
     if (!decode.userId) {
       return res.status(401).send({ message: "Invalid token" });
