@@ -3,14 +3,11 @@ const JWT_SECRET = process.env.jwt_SECRET_KEY;
 
 const verifyToken = (req, res, next) => {
   try {
-    // Check Authorization header
     const authHeader = req.headers.authorization;
-    const token = authHeader && authHeader.split(" ")[1]; // Extract Bearer token
-
-    // Fallback to cookies if token is not in headers
+    const token = authHeader && authHeader.split(" ")[1];
     const finalToken = token || req.cookies.token;
 
-    console.log("Token being verified:", finalToken); // Debugging log
+    console.log("Token Received:", finalToken); // Log token for debugging
 
     if (!finalToken) {
       return res.status(401).send({ message: "No token provided" });
@@ -26,7 +23,7 @@ const verifyToken = (req, res, next) => {
     req.role = decode.role;
     next();
   } catch (err) {
-    console.error("Token verification error:", err); // Log the error
+    console.error("Token Verification Error:", err); // Log error details
     res.status(401).send({ message: "Invalid token" });
   }
 };
