@@ -35,7 +35,8 @@ router.post("/login", async (req, res) => {
     res.cookie("token", token, {
       httpOnly: true,
       secure: true,
-      sameSite: "Strict", // Ensures cookies are only sent in a same-site context
+      sameSite: "Strict",
+      domain: "https://voyagers-frontend.onrender.com",
     });
     res.status(200).send({
       message: "Login Successful",
