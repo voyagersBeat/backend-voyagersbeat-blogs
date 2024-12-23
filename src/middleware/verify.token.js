@@ -4,26 +4,22 @@ const JWT_SECRET = process.env.jwt_SECRET_KEY;
 const verifyToken = (req, res, next) => {
   try {
     const authHeader = req.headers.authorization;
-    const token = authHeader && authHeader.split(" ")[1];
-    const finalToken = token || req.cookies.token;
+    const token = authHeader?.split(" ")[1] || req.cookies.token; // Extract token from header or cookies
 
-    console.log("Token Received:", finalToken); // Log token for debugging
-
-    if (!finalToken) {
+    if (!token) {
       return res.status(401).send({ message: "No token provided" });
     }
 
-    const decode = jwt.verify(finalToken, JWT_SECRET);
+    const decoded = jwt.verify(token, JWT_SECRET);
 
-    if (!decode.userId) {
+    if (!decoded.userId) {
       return res.status(401).send({ message: "Invalid token" });
     }
 
-    req.userId = decode.userId;
-    req.role = decode.role;
+    req.userId = decoded.userId;
+    req.role = decoded.role;
     next();
   } catch (err) {
-    console.error("Token Verification Error:", err); // Log error details
     res.status(401).send({ message: "Invalid token" });
   }
 };
