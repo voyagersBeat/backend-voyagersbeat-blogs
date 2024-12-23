@@ -36,8 +36,7 @@ router.post("/login", async (req, res) => {
       httpOnly: true,
       secure: true,
       sameSite: "Strict",
-      domain: "https://voyagers-frontend.onrender.com",
-      domain: "https://voyagers-backend.onrender.com",
+      
     });
     res.status(200).send({
       message: "Login Successful",
