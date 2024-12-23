@@ -36,9 +36,7 @@ router.post("/login", async (req, res) => {
       httpOnly: true,
       secure: true,
       sameSite: "Strict", // Ensures cookies are only sent in a same-site context
-      domain: "https://voyagers-backend.onrender.com", // Makes the cookie accessible across subdomains
     });
-
     res.status(200).send({
       message: "Login Successful",
       user: {
