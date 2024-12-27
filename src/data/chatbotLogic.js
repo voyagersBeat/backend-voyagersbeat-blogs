@@ -1,23 +1,26 @@
 const tripOptions = [
   {
     id: 0,
-    text: "Winter Trip",
-    followUp: "Experience the serene beauty of snowy mountains.",
+    text: "Winter Trip ❄️",
+    followUp:
+      "Experience the serene beauty of snowy mountains. Temperatures drop to -10°C, perfect for snow lovers.",
   },
   {
     id: 1,
-    text: "Spiti Trip",
-    followUp: "Explore the breathtaking landscapes of Spiti Valley.",
+    text: "Spiti Trip 🏔️",
+    followUp:
+      "Explore the breathtaking landscapes of Spiti Valley. Average altitude: 12,500 ft, offering stunning views.",
   },
   {
     id: 2,
-    text: "Adventure Trip",
-    followUp: "Embark on an adventure-filled journey.",
+    text: "Adventure Trip 🚵‍♂️",
+    followUp:
+      "Embark on an adventure-filled journey. Activities include rafting, trekking, and mountain biking.",
   },
 ];
 
 const getOptions = () => ({
-  message: "Please choose one of the following trips:",
+  message: "Please choose one of the following trips: 👇",
   options: tripOptions.map((option) => ({ id: option.id, text: option.text })),
 });
 
