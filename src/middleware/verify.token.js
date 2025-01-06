@@ -11,7 +11,7 @@ const verifyToken = (req, res, next) => {
       authHeader.split(" ")[1];
     const finalToken = token || req.cookies.token;
 
-    console.log("Token being verified:", finalToken); // Debugging log
+    console.log("Token being verified:", finalToken); 
 
     if (!finalToken) {
       return res.status(401).send({ message: "No token provided" });

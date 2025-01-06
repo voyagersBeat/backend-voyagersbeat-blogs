@@ -34,10 +34,10 @@ router.post("/login", async (req, res) => {
     const token = await generateToken(user._id);
     res.cookie("token", token, {
       httpOnly: true,
-      secure: true,
-      sameSite: "Strict",
-      
+      secure: process.env.NODE_ENV === "production",
+      sameSite: "strict",
     });
+
     res.status(200).send({
       message: "Login Successful",
       user: {
