@@ -18,6 +18,7 @@ router.post("/register", async (req, res) => {
 });
 
 // Login user
+// Login user
 router.post("/login", async (req, res) => {
   try {
     const { email, password } = req.body;
@@ -32,14 +33,10 @@ router.post("/login", async (req, res) => {
 
     // Generate token after login
     const token = await generateToken(user._id);
-    res.cookie("token", token, {
-      httpOnly: true,
-      secure: true,
-      sameSite: "Strict",
-      
-    });
+
     res.status(200).send({
       message: "Login Successful",
+      token,
       user: {
         id: user._id,
         email: user.email,
